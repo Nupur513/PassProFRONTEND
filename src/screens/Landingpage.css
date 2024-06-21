@@ -1,0 +1,112 @@
+/* landingpage.css */
+
+/* Global styles */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #000; /* Black background */
+  color: #fff; /* White text color */
+}
+
+/* Landing page styles */
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Minimum height of viewport */
+}
+
+.landing-page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.landing-page h1 {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  color: #FFA500; /* Orange text color */
+  opacity: 0; /* Start with opacity 0 for fade in effect */
+  animation: fadeIn 1s ease-out forwards; /* Animation for fade in */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.landing-page p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0; /* Start with opacity 0 for fade in effect */
+  animation: fadeIn 1s ease-out 0.5s forwards; /* Animation for fade in with delay */
+}
+
+.features {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 3rem;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.feature i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #FFA500; /* Orange icon color */
+}
+
+.button-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  justify-content: center; /* Center align buttons horizontally */
+}
+
+.button-container .btn {
+  width: 250px; /* Increased width for bigger buttons */
+  height: 60px; /* Increased height for bigger buttons */
+  font-size: 1.5rem; /* Increased font size */
+  background-color: #FFA500; /* Orange background */
+  color: #fff; /* White text color */
+  border: none; /* Remove default border */
+  border-radius: 30px; /* Rounded corners */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  transition: all 0.3s ease; /* Smooth transition */
+  display: flex; /* Enable flexbox */
+  justify-content: center; /* Center align text horizontally */
+  align-items: center; /* Center align text vertically */
+  padding: 0 20px; /* Adjust padding for better text alignment */
+}
+
+.button-container .btn:hover {
+  transform: translateY(-2px); /* Move button up on hover */
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */
+}
+
+@media (max-width: 767px) {
+  .landing-page h1 {
+    font-size: 2.5rem;
+  }
+  
+  .button-container {
+    flex-direction: column;
+    align-items: center; /* Center align buttons vertically on small screens */
+  }
+}
+
+
+
+
+
