@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import instance from '../axiosConfig'; // Ensure this import is correct
+import { jwtDecode } from 'jwt-decode'; // Correct import
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -86,9 +87,19 @@ const ApplyOutpassForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [userId, setUserId] = useState('');
 
   // Get today's date for comparison
   const today = new Date().toISOString().split('T')[0];
+
+  useEffect(() => {
+    // Retrieve and decode the token from local storage
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserId(decodedToken.userId);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,6 +107,7 @@ const ApplyOutpassForm = () => {
 
     try {
       const response = await instance.post('/outpass/request', {
+        userId, // Add userId to the request body
         outDate,
         returnDate,
         reason,

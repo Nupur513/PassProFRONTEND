@@ -1,4 +1,3 @@
-// PendingRequests.js
 import React, { useEffect, useState } from 'react';
 import instance from '../axiosConfig'; // Ensure this import is correct
 import { makeStyles } from '@material-ui/core/styles';
@@ -77,30 +76,69 @@ const PendingRequests = () => {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    // Fetch pending outpasses from the database
-    instance.get('/outpass/pending-requests') // Adjust the endpoint as necessary
-      .then((response) => setRequests(response.data))
-      .catch((error) => console.error('Error fetching data:', error));
+    fetchPendingRequests();
   }, []);
 
-  const handleApprove = (id) => {
-    instance.post(`/outpass/approve/${id}`)
-      .then((response) => {
-        if (response.data.success) {
-          setRequests(requests.filter((request) => request.id !== id));
-        }
-      })
-      .catch((error) => console.error('Error approving outpass:', error));
+  const fetchPendingRequests = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found. Please log in again.');
+      }
+
+      const response = await instance.get('/outpass/pending', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setRequests(response.data);
+    } catch (error) {
+      console.error('Error fetching pending requests:', error);
+      // Handle error fetching requests
+    }
   };
 
-  const handleDecline = (id) => {
-    instance.post(`/outpass/decline/${id}`)
-      .then((response) => {
-        if (response.data.success) {
-          setRequests(requests.filter((request) => request.id !== id));
-        }
-      })
-      .catch((error) => console.error('Error declining outpass:', error));
+  const handleApprove = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found. Please log in again.');
+      }
+
+      await instance.post(`/outpass/handle`, { outpassId: id, status: 'approved' }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Update requests state after approval
+      setRequests(requests.filter(request => request._id !== id));
+    } catch (error) {
+      console.error('Error approving outpass:', error);
+      // Handle error approving outpass
+    }
+  };
+
+  const handleDecline = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found. Please log in again.');
+      }
+
+      await instance.post(`/outpass/handle`, { outpassId: id, status: 'rejected' }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Update requests state after rejection
+      setRequests(requests.filter(request => request._id !== id));
+    } catch (error) {
+      console.error('Error declining outpass:', error);
+      // Handle error declining outpass
+    }
   };
 
   return (
@@ -122,7 +160,7 @@ const PendingRequests = () => {
       </AppBar>
       <Container maxWidth="md">
         {requests.map(request => (
-          <div key={request.id} className={classes.requestContainer}>
+          <div key={request._id} className={classes.requestContainer}>
             <div className={classes.requestItem}>
               <div className={classes.requestInfo}>
                 <Typography variant="h6">{request.reason}</Typography>
@@ -143,14 +181,14 @@ const PendingRequests = () => {
                 <Button
                   variant="contained"
                   className={classes.actionBtn}
-                  onClick={() => handleApprove(request.id)}
+                  onClick={() => handleApprove(request._id)}
                 >
                   Approve
                 </Button>
                 <Button
                   variant="contained"
                   className={classes.actionBtn}
-                  onClick={() => handleDecline(request.id)}
+                  onClick={() => handleDecline(request._id)}
                 >
                   Decline
                 </Button>
