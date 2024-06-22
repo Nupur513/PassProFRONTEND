@@ -1,88 +1,45 @@
+// Register.js
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Register.css';
+import axios from '../axiosConfig'; // Import the configured Axios instance
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import './Login.css'; // Import the same CSS file as Login.js for consistent styling
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
-    userId: '',
     username: '',
     password: '',
-    role: '',
+    role: 'student', // Default role
     fullName: '',
     email: ''
   });
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission and registration logic here
-    // Example: navigate to login page after successful registration
-    navigate('/login');
+    try {
+      const response = await axios.post('/users/register', form);
+      alert(response.data.message); // Show success message
+      navigate('/login'); // Navigate to login page after successful registration
+    } catch (error) {
+      setError(error.response.data.message); // Display error message
+    }
   };
 
   return (
-    <div className="register-page">
-      <Container className="register-page-content">
-        <h1>Register for PassPro</h1>
+    <div className="login-page"> {/* Apply the same class for styling consistency */}
+      <Container className="login-page-content"> {/* Apply the same class for styling consistency */}
+        <h1>Register</h1>
         <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formUserId">
-            <Form.Label>User ID</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter your user ID"
-              name="userId"
-              value={form.userId}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="formUsername">
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter your username"
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="formPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Enter your password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="formRole">
-            <Form.Label>Role</Form.Label>
-            <Form.Control
-              as="select"
-              name="role"
-              value={form.role}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select role</option>
-              <option value="student">Student</option>
-              <option value="warden">Warden</option>
-            </Form.Control>
-          </Form.Group>
-
+          {error && <p style={{ color: 'red' }}>{error}</p>}
           <Form.Group controlId="formFullName">
             <Form.Label>Full Name</Form.Label>
             <Form.Control
@@ -94,9 +51,8 @@ const RegisterPage = () => {
               required
             />
           </Form.Group>
-
           <Form.Group controlId="formEmail">
-            <Form.Label>Email address</Form.Label>
+            <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
               placeholder="Enter your email"
@@ -106,7 +62,40 @@ const RegisterPage = () => {
               required
             />
           </Form.Group>
-
+          <Form.Group controlId="formUsername">
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter your username"
+              name="username"
+              value={form.username}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="formPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Enter your password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="formRole">
+            <Form.Label>Role</Form.Label>
+            <Form.Control
+              as="select"
+              name="role"
+              value={form.role}
+              onChange={handleChange}
+            >
+              <option value="student">Student</option>
+              <option value="warden">Warden</option>
+            </Form.Control>
+          </Form.Group>
           <Button variant="primary" type="submit">
             Register
           </Button>
@@ -117,3 +106,4 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+

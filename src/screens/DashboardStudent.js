@@ -9,8 +9,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import ExitToAppIcon from '@material-ui/icons/ExitToAppOutlined';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import './DashboardWarden.css';
+import { Link, useNavigate } from 'react-router-dom';
+import './DashboardStudent.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,9 +79,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DashboardWarden = () => {
+const DashboardStudent = () => {
   const classes = useStyles();
-  const navigate = useNavigate(); // Hook from react-router-dom for navigation
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     // Clear token and role from localStorage
@@ -97,7 +97,7 @@ const DashboardWarden = () => {
       <AppBar position="static" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Warden Dashboard
+            Student Dashboard
           </Typography>
           <Button
             className={classes.logoutBtn}
@@ -110,29 +110,29 @@ const DashboardWarden = () => {
       </AppBar>
       <Container maxWidth="md">
         <Typography variant="h3" className={classes.header}>
-          Welcome, Warden!
+          Welcome, Student!
         </Typography>
         <div className={classes.listContainer}>
           <List>
             <ListItem
               button
               component={Link}
-              to="/warden/pending-requests"
+              to="/student/apply-outpass"
               className={classes.listItem}
             >
               <ListItemText
-                primary="Check Pending Requests"
+                primary="Apply for Outpass"
                 className={classes.listItemText}
               />
             </ListItem>
             <ListItem
               button
               component={Link}
-              to="/warden/approved-outpasses"
+              to="/student/check-status"
               className={classes.listItem}
             >
               <ListItemText
-                primary="View Approved Outpasses"
+                primary="Check Outpass Status"
                 className={classes.listItemText}
               />
             </ListItem>
@@ -143,4 +143,4 @@ const DashboardWarden = () => {
   );
 };
 
-export default DashboardWarden;
+export default DashboardStudent;

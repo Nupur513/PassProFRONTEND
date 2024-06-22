@@ -1,11 +1,14 @@
+// PendingRequests.js
 import React, { useEffect, useState } from 'react';
+import instance from '../axiosConfig'; // Ensure this import is correct
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import ExitToAppIcon from '@material-ui/icons/ExitToAppOutlined';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,21 +19,18 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     paddingBottom: theme.spacing(4),
   },
-  header: {
-    marginBottom: theme.spacing(4),
-    color: '#FFA500',
-    textAlign: 'center',
-    fontSize: '2rem', // Adjust this value to make the heading smaller
-    padding: theme.spacing(2), // Add padding
-    margin: theme.spacing(2), // Add margin
-    border: '1px solid #FFA500', // Optional: Add a border to enhance the heading
-    borderRadius: '5px', // Optional: Add border radius for rounded corners
+  appBar: {
+    backgroundColor: '#333',
+    marginBottom: theme.spacing(2),
+    width: '100%',
+    borderRadius: '0',
   },
-  listContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
+  title: {
+    flexGrow: 1,
+    textAlign: 'left',
+    marginLeft: theme.spacing(2),
+  },
+  requestContainer: {
     width: '100%',
     maxWidth: '600px',
     margin: 'auto',
@@ -40,61 +40,124 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
     boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.5)',
   },
-  listItem: {
-    width: '100%',
-    maxWidth: '400px',
+  requestItem: {
     marginBottom: theme.spacing(2),
-    backgroundColor: '#333',
-    borderRadius: '5px',
     padding: theme.spacing(2),
+    border: '1px solid #fff',
+    borderRadius: '5px',
   },
-  listItemText: {
+  requestInfo: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  requestDetails: {
     color: '#fff',
+    marginLeft: theme.spacing(2),
+  },
+  actionBtn: {
+    marginRight: theme.spacing(2),
+    backgroundColor: '#FFA500',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#e69500',
+    },
+  },
+  backButton: {
+    backgroundColor: '#FFA500', // Orange background color
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#e69500', // Darker shade of orange on hover
+    },
   },
 }));
 
 const PendingRequests = () => {
   const classes = useStyles();
-  const [loading, setLoading] = useState(true);
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    // Fetch pending requests from the server
-    fetch('/api/pending-requests') // Adjust the API endpoint as necessary
-      .then((response) => response.json())
-      .then((data) => {
-        setRequests(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching pending requests:', error);
-        setLoading(false);
-      });
+    // Fetch pending outpasses from the database
+    instance.get('/outpass/pending-requests') // Adjust the endpoint as necessary
+      .then((response) => setRequests(response.data))
+      .catch((error) => console.error('Error fetching data:', error));
   }, []);
+
+  const handleApprove = (id) => {
+    instance.post(`/outpass/approve/${id}`)
+      .then((response) => {
+        if (response.data.success) {
+          setRequests(requests.filter((request) => request.id !== id));
+        }
+      })
+      .catch((error) => console.error('Error approving outpass:', error));
+  };
+
+  const handleDecline = (id) => {
+    instance.post(`/outpass/decline/${id}`)
+      .then((response) => {
+        if (response.data.success) {
+          setRequests(requests.filter((request) => request.id !== id));
+        }
+      })
+      .catch((error) => console.error('Error declining outpass:', error));
+  };
 
   return (
     <div className={classes.root}>
+      <AppBar position="static" className={classes.appBar}>
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            Pending Outpass Requests
+          </Typography>
+          <Button
+            component={Link}
+            to="/warden/dashboard"
+            startIcon={<ExitToAppIcon />}
+            className={classes.backButton}
+          >
+            Back to Dashboard
+          </Button>
+        </Toolbar>
+      </AppBar>
       <Container maxWidth="md">
-        <Typography variant="h4" className={classes.header}>
-          Pending Outpasses
-        </Typography>
-        {loading ? (
-          <CircularProgress color="secondary" />
-        ) : (
-          <div className={classes.listContainer}>
-            <List>
-              {requests.map((request) => (
-                <ListItem key={request.outpassId} className={classes.listItem}>
-                  <ListItemText
-                    primary={`Student: ${request.student.name}`}
-                    secondary={`Reason: ${request.reason}, Destination: ${request.destination}, Out Date: ${new Date(request.outDate).toLocaleDateString()}, Return Date: ${new Date(request.returnDate).toLocaleDateString()}`}
-                    className={classes.listItemText}
-                  />
-                </ListItem>
-              ))}
-            </List>
+        {requests.map(request => (
+          <div key={request.id} className={classes.requestContainer}>
+            <div className={classes.requestItem}>
+              <div className={classes.requestInfo}>
+                <Typography variant="h6">{request.reason}</Typography>
+                <Typography variant="body2" className={classes.requestDetails}>
+                  Status: {request.status.toUpperCase()}
+                </Typography>
+              </div>
+              <Typography variant="body1" className={classes.requestDetails}>
+                <strong>Destination:</strong> {request.destination}
+              </Typography>
+              <Typography variant="body1" className={classes.requestDetails}>
+                <strong>Out Date:</strong> {request.outDate}
+              </Typography>
+              <Typography variant="body1" className={classes.requestDetails}>
+                <strong>Return Date:</strong> {request.returnDate}
+              </Typography>
+              <div>
+                <Button
+                  variant="contained"
+                  className={classes.actionBtn}
+                  onClick={() => handleApprove(request.id)}
+                >
+                  Approve
+                </Button>
+                <Button
+                  variant="contained"
+                  className={classes.actionBtn}
+                  onClick={() => handleDecline(request.id)}
+                >
+                  Decline
+                </Button>
+              </div>
+            </div>
           </div>
-        )}
+        ))}
       </Container>
     </div>
   );
