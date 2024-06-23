@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     border: '1px solid #fff',
     borderRadius: '5px',
+    position: 'relative',
   },
   requestInfo: {
     display: 'flex',
@@ -62,12 +63,14 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#e69500',
     },
   },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
   backButton: {
-    backgroundColor: '#FFA500', // Orange background color
-    color: '#fff',
-    '&:hover': {
-      backgroundColor: '#e69500', // Darker shade of orange on hover
-    },
+    color: '#fff', // White text color
+    textTransform: 'none', // Ensure the text is not transformed to uppercase
   },
 }));
 
@@ -141,6 +144,11 @@ const PendingRequests = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static" className={classes.appBar}>
@@ -169,15 +177,18 @@ const PendingRequests = () => {
                 </Typography>
               </div>
               <Typography variant="body1" className={classes.requestDetails}>
+                <strong>Student Name:</strong> {request.student.fullName} ({request.student.username})
+              </Typography>
+              <Typography variant="body1" className={classes.requestDetails}>
                 <strong>Destination:</strong> {request.destination}
               </Typography>
               <Typography variant="body1" className={classes.requestDetails}>
-                <strong>Out Date:</strong> {request.outDate}
+                <strong>Out Date:</strong> {formatDate(request.outDate)}
               </Typography>
               <Typography variant="body1" className={classes.requestDetails}>
-                <strong>Return Date:</strong> {request.returnDate}
+                <strong>Return Date:</strong> {formatDate(request.returnDate)}
               </Typography>
-              <div>
+              <div className={classes.buttonContainer}>
                 <Button
                   variant="contained"
                   className={classes.actionBtn}
@@ -202,3 +213,5 @@ const PendingRequests = () => {
 };
 
 export default PendingRequests;
+
+
