@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Import axios library
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -72,33 +73,30 @@ const useStyles = makeStyles((theme) => ({
 
 const ApprovedOutpass = () => {
   const classes = useStyles();
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      reason: 'Going home for vacation',
-      destination: 'Home',
-      outDate: '2024-06-25',
-      returnDate: '2024-07-05',
-      status: 'approved',
-    },
-    {
-      id: 2,
-      reason: 'Attending family function',
-      destination: 'Hometown',
-      outDate: '2024-07-01',
-      returnDate: '2024-07-02',
-      status: 'approved',
-    },
-  ]);
+  const [requests, setRequests] = useState([]); // Define setRequests here to manage state
 
-  const handleRejectRequest = (id) => {
-    const updatedRequests = requests.map(request => {
-      if (request.id === id) {
-        return { ...request, status: 'rejected' };
+  useEffect(() => {
+    fetchApprovedOutpasses(); // Fetch approved outpasses when component mounts
+  }, []);
+
+  const fetchApprovedOutpasses = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found. Please log in again.');
       }
-      return request;
-    });
-    setRequests(updatedRequests);
+
+      const response = await axios.get('/api/outpass/approved', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setRequests(response.data); // Update state with fetched data
+    } catch (error) {
+      console.error('Error fetching approved outpasses:', error);
+      // Handle error fetching approved outpasses
+    }
   };
 
   return (
@@ -120,7 +118,7 @@ const ApprovedOutpass = () => {
       </AppBar>
       <Container maxWidth="md">
         {requests.map(request => (
-          <div key={request.id} className={classes.requestContainer}>
+          <div key={request._id} className={classes.requestContainer}>
             <div className={classes.requestItem}>
               <div className={classes.requestInfo}>
                 <Typography variant="h6">{request.reason}</Typography>
@@ -137,13 +135,6 @@ const ApprovedOutpass = () => {
               <Typography variant="body1" className={classes.requestDetails}>
                 <strong>Return Date:</strong> {request.returnDate}
               </Typography>
-              <Button
-                variant="contained"
-                className={classes.actionBtn}
-                onClick={() => handleRejectRequest(request.id)}
-              >
-                Reject
-              </Button>
             </div>
           </div>
         ))}
