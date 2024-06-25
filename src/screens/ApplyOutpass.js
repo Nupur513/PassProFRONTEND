@@ -106,6 +106,7 @@ const ApplyOutpassForm = () => {
     setSubmitting(true);
 
     try {
+
       const response = await instance.post('/outpass/request', {
         userId, // Add userId to the request body
         outDate,

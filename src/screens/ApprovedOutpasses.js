@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Import axios library
+import axios from 'axios';
+import instance from '../axiosConfig';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -86,7 +87,7 @@ const ApprovedOutpass = () => {
         throw new Error('No token found. Please log in again.');
       }
 
-      const response = await axios.get('/api/outpass/approved', {
+      const response = await instance.get('/outpass/approved', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
