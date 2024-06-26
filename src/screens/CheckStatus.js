@@ -64,20 +64,20 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   backButton: {
-    backgroundColor: '#FFA500', // Orange background color
+    backgroundColor: 'transparent', // Set background color to transparent
     color: '#fff',
     '&:hover': {
-      backgroundColor: '#e69500', // Darker shade of orange on hover
+      backgroundColor: 'transparent', // Keep hover background color transparent
     },
   },
 }));
 
-const ApprovedOutpass = () => {
+const CheckStatus = () => {
   const classes = useStyles();
-  const [requests, setRequests] = useState([]); // Define setRequests here to manage state
+  const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    fetchApprovedOutpasses(); // Fetch approved outpasses when component mounts
+    fetchApprovedOutpasses();
   }, []);
 
   const fetchApprovedOutpasses = async () => {
@@ -93,11 +93,15 @@ const ApprovedOutpass = () => {
         },
       });
 
-      setRequests(response.data); // Update state with fetched data
+      setRequests(response.data);
     } catch (error) {
       console.error('Error fetching approved outpasses:', error);
-      // Handle error fetching approved outpasses
     }
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   return (
@@ -109,7 +113,7 @@ const ApprovedOutpass = () => {
           </Typography>
           <Button
             component={Link}
-            to="/warden/dashboard"
+            to="/student/dashboard" // Updated path for student dashboard
             startIcon={<ExitToAppIcon />}
             className={classes.backButton}
           >
@@ -131,10 +135,10 @@ const ApprovedOutpass = () => {
                 <strong>Destination:</strong> {request.destination}
               </Typography>
               <Typography variant="body1" className={classes.requestDetails}>
-                <strong>Out Date:</strong> {request.outDate}
+                <strong>Out Date:</strong> {formatDate(request.outDate)}
               </Typography>
               <Typography variant="body1" className={classes.requestDetails}>
-                <strong>Return Date:</strong> {request.returnDate}
+                <strong>Return Date:</strong> {formatDate(request.returnDate)}
               </Typography>
             </div>
           </div>
@@ -144,4 +148,5 @@ const ApprovedOutpass = () => {
   );
 };
 
-export default ApprovedOutpass;
+export default CheckStatus;
+

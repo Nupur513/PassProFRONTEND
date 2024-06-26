@@ -1,5 +1,3 @@
-// Register.js
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../axiosConfig'; // Import the configured Axios instance
@@ -30,13 +28,17 @@ const RegisterPage = () => {
       alert(response.data.message); // Show success message
       navigate('/login'); // Navigate to login page after successful registration
     } catch (error) {
-      setError(error.response.data.message); // Display error message
+      if (error.response && error.response.status === 409) {
+        setError('User already exists.'); // Display user already exists message
+      } else {
+        setError(error.response.data.message || 'User Already Exists.'); // Display other error messages
+      }
     }
   };
 
   return (
-    <div className="login-page"> {/* Apply the same class for styling consistency */}
-      <Container className="login-page-content"> {/* Apply the same class for styling consistency */}
+    <div className="login-page">
+      <Container className="login-page-content">
         <h1>Register</h1>
         <Form onSubmit={handleSubmit}>
           {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -106,4 +108,3 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
-

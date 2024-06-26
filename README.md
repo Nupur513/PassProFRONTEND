@@ -1,70 +1,61 @@
-# Getting Started with Create React App
+# Frontend Project README
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Overview
 
-## Available Scripts
+This project implements a frontend application for managing outpass applications and approvals. It includes user authentication, role-based access control for outpass applications.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+### User Authentication
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Users can register and login to their accounts.
+- Authentication is handled securely using JWT tokens.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Role-Based Access Control
 
-### `npm test`
+- **Student Role:**
+  - Fill out outpass application forms.
+  - View status of submitted outpass applications.
+  
+- **Warden Role:**
+  - View pending outpass applications.
+  - Approve or reject pending applications.
+  - View all approved outpass records.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Application Workflow
 
-### `npm run build`
+#### Student Application
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Login:** User logs into their account.
+2. **Fill Outpass Application:**
+   - Students fill out an outpass application form and submit it.
+   - Applications are stored with an initial status of "Pending".
+3. **View Application Status:**
+   - Students can view the current status of their submitted outpass applications.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Warden Actions
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Login:** Warden logs into their account.
+2. **View Pending Applications:**
+   - Wardens can view a list of pending outpass applications.
+3. **Approve or Reject Applications:**
+   - Wardens have the ability to approve or reject pending outpass applications, updating their status in the database.
+4. **View Approved Records:**
+   - Wardens can view a list of all approved outpass records.
 
-### `npm run eject`
+## Technologies Used
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **React:** Frontend framework for building user interfaces.
+- **React Router:** For client-side routing.
+- **Material-UI:** UI component library for React.
+- **Axios:** HTTP client for making API requests.
+- **React Bootstrap:** UI components from Bootstrap framework for React applications.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Setup Instructions
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Clone the repository from GitHub.
+2. Install dependencies using `npm install`.
+3. Configure Axios instance (`axiosConfig.js`) with backend API URL.
+4. Start the development server using `npm start`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

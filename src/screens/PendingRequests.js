@@ -167,51 +167,55 @@ const PendingRequests = () => {
         </Toolbar>
       </AppBar>
       <Container maxWidth="md">
-        {requests.map(request => (
-          <div key={request._id} className={classes.requestContainer}>
-            <div className={classes.requestItem}>
-              <div className={classes.requestInfo}>
-                <Typography variant="h6">{request.reason}</Typography>
-                <Typography variant="body2" className={classes.requestDetails}>
-                  Status: {request.status.toUpperCase()}
+        {requests.length === 0 ? (
+          <Typography variant="h6" align="center">
+            No pending requests
+          </Typography>
+        ) : (
+          requests.map(request => (
+            <div key={request._id} className={classes.requestContainer}>
+              <div className={classes.requestItem}>
+                <div className={classes.requestInfo}>
+                  <Typography variant="h6">{request.reason}</Typography>
+                  <Typography variant="body2" className={classes.requestDetails}>
+                    Status: {request.status.toUpperCase()}
+                  </Typography>
+                </div>
+                <Typography variant="body1" className={classes.requestDetails}>
+                  <strong>Student Name:</strong> {request.student.fullName} ({request.student.username})
                 </Typography>
-              </div>
-              <Typography variant="body1" className={classes.requestDetails}>
-                <strong>Student Name:</strong> {request.student.fullName} ({request.student.username})
-              </Typography>
-              <Typography variant="body1" className={classes.requestDetails}>
-                <strong>Destination:</strong> {request.destination}
-              </Typography>
-              <Typography variant="body1" className={classes.requestDetails}>
-                <strong>Out Date:</strong> {formatDate(request.outDate)}
-              </Typography>
-              <Typography variant="body1" className={classes.requestDetails}>
-                <strong>Return Date:</strong> {formatDate(request.returnDate)}
-              </Typography>
-              <div className={classes.buttonContainer}>
-                <Button
-                  variant="contained"
-                  className={classes.actionBtn}
-                  onClick={() => handleApprove(request._id)}
-                >
-                  Approve
-                </Button>
-                <Button
-                  variant="contained"
-                  className={classes.actionBtn}
-                  onClick={() => handleDecline(request._id)}
-                >
-                  Decline
-                </Button>
+                <Typography variant="body1" className={classes.requestDetails}>
+                  <strong>Destination:</strong> {request.destination}
+                </Typography>
+                <Typography variant="body1" className={classes.requestDetails}>
+                  <strong>Out Date:</strong> {formatDate(request.outDate)}
+                </Typography>
+                <Typography variant="body1" className={classes.requestDetails}>
+                  <strong>Return Date:</strong> {formatDate(request.returnDate)}
+                </Typography>
+                <div className={classes.buttonContainer}>
+                  <Button
+                    variant="contained"
+                    className={classes.actionBtn}
+                    onClick={() => handleApprove(request._id)}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    variant="contained"
+                    className={classes.actionBtn}
+                    onClick={() => handleDecline(request._id)}
+                  >
+                    Decline
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </Container>
     </div>
   );
 };
 
 export default PendingRequests;
-
-
