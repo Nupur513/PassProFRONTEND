@@ -6,7 +6,7 @@ import axios from '../axiosConfig'; // Import the configured Axios instance
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import './Login.css'; // Import the same CSS file as Login.js for consistent styling
+import './Login.css'; 
 
 const LoginPage = () => {
   const [form, setForm] = useState({
